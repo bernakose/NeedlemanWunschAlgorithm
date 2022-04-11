@@ -21,16 +21,15 @@ namespace NeedlemanWunschAlgorithm
         int match, mismatch, gap;
         string[] FirstSequence;
         string[] SecondSequence;
-        int[,] Matrix;
         int diziboyutu, diziboyutu1;
-        List<List<Trace>> BackTraces;
 
         private void Form1_Load(object sender, EventArgs e)
-        {            
+        {
 
             if (textBox3.Text == "")
             {
                 match = 1;
+                textBox3.Text = match.ToString();
             }
             else
             {
@@ -40,6 +39,8 @@ namespace NeedlemanWunschAlgorithm
             if (textBox4.Text == "")
             {
                 mismatch = -1;
+                textBox4.Text = mismatch.ToString();
+
             }
             else
             {
@@ -49,11 +50,13 @@ namespace NeedlemanWunschAlgorithm
             if (textBox5.Text == "")
             {
                 gap = -2;
+                textBox5.Text = gap.ToString();
+
             }
             else
             {
                 gap = Convert.ToInt32(textBox5.Text);
-            }        
+            }
 
         }
 
@@ -74,9 +77,9 @@ namespace NeedlemanWunschAlgorithm
 
                     SecondSequence = File.ReadAllLines(@"C:\Users\Berna\Desktop\Seq2.txt");
                     textBox2.Text = SecondSequence[1];
-                    diziboyutu1 = Convert.ToInt32(SecondSequence[0]); 
+                    diziboyutu1 = Convert.ToInt32(SecondSequence[0]);
 
-                    Matrix = new int[FirstSequence.Length + 1, SecondSequence.Length + 1];
+                    //Matrix = new int[FirstSequence.Length + 1, SecondSequence.Length + 1];
 
                 }
 
@@ -93,7 +96,7 @@ namespace NeedlemanWunschAlgorithm
                 MessageBox.Show("Hata :" + ex.ToString(), "Error");
 
             }
-            
+
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -118,209 +121,142 @@ namespace NeedlemanWunschAlgorithm
 
             }
 
-
             DataTable tablo = new DataTable();
-            tablo.Columns.Add(" ");
-            tablo.Rows.Add(" ");
 
-            for (int i = 0; i < dizin1.Length; i++)
-            {
+            string dizilimRow = " ";
+            string header = "";
+            tablo.Columns.Add(dizilimRow);
+            tablo.Columns.Add(dizilimRow + dizilimRow);
 
-                DataRow row1 = tablo.NewRow();
-                tablo.Columns.Add(dizin1[i]);
-                
-                row1[" "] = dizin2[i];
-                tablo.Rows.Add(row1);
-            }
+            DataRow row1 = tablo.NewRow();
+            tablo.Rows.Add(row1);
+            tablo.Rows.Add(dizilimRow);
 
             dataGridView1.DataSource = tablo;
 
-            
+            for (int i = 0; i < dizin1.Length; i++)
+            {
+                tablo.Columns.Add(header);
+                header += header;
+            }
+
+            for (int i = 0; i < dizin2.Length; i++)//aşağı doğru olanlar
+            {
+                DataRow row = tablo.NewRow();
+                row[dizilimRow] = dizin2[i];
+                tablo.Rows.Add(row);
+                dataGridView1.DataSource = tablo;
+            }
+
+
+            for (int i = 1; i < dizin1.Length + 1; i++)
+            {
+                dataGridView1.Rows[0].Cells[i + 1].Value = dizin1[i - 1];
+            }
+
+            dataGridView1.Rows[1].Cells[1].Value = 0;
+            listBox1.Items.Add(dataGridView1.Rows[0].Cells[2].Value);
+
+            hizala(dizin1, dizin2);
+        
+        
         }
 
-
-
-
-        public void FillMatrix()
+        public int dizilimKarsilastirma(string[] dizin1, string[] dizin2)
         {
-            for (int i = 0; i < Matrix.GetLength(0); i++)
-            {
-                Matrix[i, 0] = i * gap;
-            }
+            int match = Convert.ToInt32(textBox3.Text);
+            int mismatch = Convert.ToInt32(textBox4.Text);
 
-            for (int j = 0; j < Matrix.GetLength(1); j++)
-            {
-                Matrix[0, j] = j * gap;
-            }
+            int sonuc = 0;
 
-
-            for (int i = 1; i < Matrix.GetLength(0); i++)
+            for (int i = 0; i < dizin2.Length; i++)
             {
-                for (int j = 1; j < Matrix.GetLength(1); j++)
+                for (int j = 0; j < dizin1.Length; j++)
                 {
-                    int topValue = Matrix[i - 1, j] + gap;
-                    int leftValue = Matrix[i, j - 1] + gap;
-                    int diagonalValue = Matrix[i - 1, j - 1] + (FirstSequence[i - 1] == SecondSequence[j - 1] ? match : mismatch);
-                    Matrix[i, j] = Math.Max(Math.Max(topValue, leftValue), diagonalValue);
+
+                    if (String.Compare(dataGridView1.Rows[0].Cells[j + 2].Value.ToString(), dataGridView1.Rows[i + 2].Cells[0].Value.ToString()) == 0)
+                    {
+                        //dataGridView1.Rows[i + 2].Cells[j + 2].Value = 1;
+                        sonuc = match;
+
+                    }
+                    else
+                    {
+                        // dataGridView1.Rows[i + 2].Cells[j + 2].Value = -1;
+                        sonuc = mismatch;
+                    }
                 }
             }
+            return sonuc;
         }
-
-        //public void TraceBack(List<Trace> traces)
-        //{
-        //    // Continue tracing until Matrix[1,1], Matrix[1,0] or Matrix[0,1]
-        //    while (!((traces.Last().RowIndex == 1 && traces.Last().ColIndex == 1) ||
-        //             (traces.Last().RowIndex == 1 && traces.Last().ColIndex == 0) ||
-        //             (traces.Last().RowIndex == 0 && traces.Last().ColIndex == 1)))
-        //    {
-        //        bool isSourceTop = false;
-        //        bool isSourceLeft = false;
-        //        bool isSourceDiagonal = false;
-
-        //        int topValue = Matrix[traces.Last().RowIndex - 1, traces.Last().ColIndex] + gap;
-        //        int leftValue = Matrix[traces.Last().RowIndex, traces.Last().ColIndex - 1] + gap;
-        //        int diagonalValue = Matrix[traces.Last().RowIndex - 1, traces.Last().ColIndex - 1] +
-        //                            (FirstSequence[traces.Last().RowIndex - 1] ==
-        //                             SecondSequence[traces.Last().ColIndex - 1]
-        //                                ? match
-        //                                : mismatch);
-
-        //        // Set flags
-        //        if (topValue == Matrix[traces.Last().RowIndex, traces.Last().ColIndex])
-        //        {
-        //            isSourceTop = true;
-        //        }
-
-        //        if (leftValue == Matrix[traces.Last().RowIndex, traces.Last().ColIndex])
-        //        {
-        //            isSourceLeft = true;
-        //        }
-
-        //        if (diagonalValue == Matrix[traces.Last().RowIndex, traces.Last().ColIndex])
-        //        {
-        //            isSourceDiagonal = true;
-        //        }
-
-        //        // Handle all possibilities, there might be alternative traces
-        //        // If there such trace exists, handle it as different traceback recursively.
-        //        if (isSourceTop && isSourceLeft && isSourceDiagonal)
-        //        {
-        //            var tempTrace = new List<Trace>(traces);
-
-        //            //top condition
-        //            tempTrace.Add(new Trace
-        //            {
-        //                RowIndex = traces.Last().RowIndex - 1,
-        //                ColIndex = traces.Last().ColIndex
-        //            });
-        //            TraceBack(tempTrace); //recursive call
-
-        //            //left condition
-        //            tempTrace = new List<Trace>(traces);
-        //            tempTrace.Add(new Trace
-        //            {
-        //                RowIndex = traces.Last().RowIndex,
-        //                ColIndex = traces.Last().ColIndex - 1
-        //            });
-        //            TraceBack(tempTrace);
-        //            traces.Add(new Trace
-        //            {
-        //                RowIndex = traces.Last().RowIndex - 1,
-        //                ColIndex = traces.Last().ColIndex - 1
-        //            });
-        //        }
-        //        else if (isSourceTop && isSourceLeft)
-        //        {
-        //            var tempTrace = new List<Trace>(traces);
-
-        //            //top condition
-        //            tempTrace.Add(new Trace
-        //            {
-        //                RowIndex = traces.Last().RowIndex - 1,
-        //                ColIndex = traces.Last().ColIndex
-        //            });
-        //            TraceBack(tempTrace);
-
-        //            //left condition
-        //            traces.Add(new Trace
-        //            {
-        //                RowIndex = traces.Last().RowIndex,
-        //                ColIndex = traces.Last().ColIndex - 1
-        //            });
-        //        }
-        //        else if (isSourceTop && isSourceDiagonal)
-        //        {
-        //            var tempTrace = new List<Trace>(traces);
-
-        //            //top condition
-        //            tempTrace.Add(new Trace
-        //            {
-        //                RowIndex = traces.Last().RowIndex - 1,
-        //                ColIndex = traces.Last().ColIndex
-        //            });
-        //            TraceBack(tempTrace);
-
-        //            //diagonal condition
-        //            traces.Add(new Trace
-        //            {
-        //                RowIndex = traces.Last().RowIndex - 1,
-        //                ColIndex = traces.Last().ColIndex - 1
-        //            });
-        //        }
-        //        else if (isSourceLeft && isSourceDiagonal)
-        //        {
-        //            var tempTrace = new List<Trace>(traces);
-
-        //            //left condition
-        //            tempTrace.Add(new Trace
-        //            {
-        //                RowIndex = traces.Last().RowIndex,
-        //                ColIndex = traces.Last().ColIndex - 1
-        //            });
-        //            TraceBack(tempTrace);
-
-        //            //diagonal condition
-        //            traces.Add(new Trace
-        //            {
-        //                RowIndex = traces.Last().RowIndex - 1,
-        //                ColIndex = traces.Last().ColIndex - 1
-        //            });
-        //        }
-        //        else if (isSourceTop)
-        //        {
-        //            traces.Add(new Trace
-        //            {
-        //                RowIndex = traces.Last().RowIndex - 1,
-        //                ColIndex = traces.Last().ColIndex
-        //            });
-        //        }
-        //        else if (isSourceLeft)
-        //        {
-        //            traces.Add(new Trace
-        //            {
-        //                RowIndex = traces.Last().RowIndex,
-        //                ColIndex = traces.Last().ColIndex - 1
-        //            });
-        //        }
-        //        else
-        //        {
-        //            traces.Add(new Trace
-        //            {
-        //                RowIndex = traces.Last().RowIndex - 1,
-        //                ColIndex = traces.Last().ColIndex - 1
-        //            });
-        //        }
-        //    }
-
-        //    traces.Add(new Trace { RowIndex = 0, ColIndex = 0 });
-        //    BackTraces.Add(traces);
-        //}
-        public class Trace
+        void hizala(string[] dizin1, string[] dizin2)
         {
-            public int RowIndex { get; set; }
-            public int ColIndex { get; set; }
+            int karsilastirma = dizilimKarsilastirma(dizin1, dizin2);
+            int gap = Convert.ToInt32(textBox5.Text);
+            int t1 = 0, t2 = 0, t3 = 0;
+            Random rs = new Random(1);
+
+            for (int j = 1; j < dizin2.Length + 2; j++)//cell
+            {
+                for (int i = 1; i < dizin1.Length + 2; i++)//row
+                {
+                    if (i == 1 && j == 1)
+                    {
+
+                    }
+                    else if (i - 1 >= 1 && j - 1 >= 1)
+                    {
+                        int parca1 = Convert.ToInt32(dataGridView1.Rows[i - 1].Cells[j - 1].Value);
+                        t1 = karsilastirma + parca1;
+                        t2 = rs.Next(-50, t1);
+                        t3 = rs.Next(-50, t1);
+                    }
+                    else if (i - 1 >= 1 && j >= 1)
+                    {
+                        int parca2 = Convert.ToInt32(dataGridView1.Rows[i - 1].Cells[j].Value);
+                        t2 = gap + parca2;
+                        t1 = rs.Next(-50, t2);
+                        t3 = rs.Next(-50, t2);
+                    }
+                    else if (i >= 1 && j - 1 >= 1)
+                    {
+                        int parca3 = Convert.ToInt32(dataGridView1.Rows[i].Cells[j - 1].Value);
+                        t3 = gap + parca3;
+                        t1 = rs.Next(-50, t3);
+                        t2 = rs.Next(-50, t3);
+                    }
+                    int sonucc = islemlerSonuc(t1, t2, t3);
+                    dataGridView1.Rows[i].Cells[j].Value = sonucc;
+                }
+
+            }
         }
 
+        public int islemlerSonuc(/*string[] dizin1, string[] dizin2*/int formul1, int formul2, int formul3)
+        {
+            int enbuyuk = formul1;
+            int sonuc = formul1;//geçici değişken atıyoruz
+
+            //int formul1 = islemler(dizin1, dizin2);
+            //int formul2 = islemler2(dizin1, dizin2);
+            //int formul3 = islemler3(dizin1, dizin2);
+
+            if (formul1 > formul2 && formul1 > formul3)
+            {
+                enbuyuk = formul1;
+            }
+            else if (formul2 > formul3)
+            {
+                enbuyuk = formul2;
+            }
+            else if (formul3 > formul2)
+            {
+                enbuyuk = formul3;
+            }
+            sonuc = enbuyuk;
+            return sonuc;
+
+        }
 
     }
 }

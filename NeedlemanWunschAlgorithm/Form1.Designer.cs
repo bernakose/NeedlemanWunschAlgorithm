@@ -160,24 +160,24 @@ namespace NeedlemanWunschAlgorithm
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(51, 293);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 259);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(543, 166);
+            this.dataGridView1.Size = new System.Drawing.Size(840, 249);
             this.dataGridView1.TabIndex = 14;
             // 
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(622, 293);
+            this.listBox1.Location = new System.Drawing.Point(907, 259);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(166, 160);
+            this.listBox1.Size = new System.Drawing.Size(93, 238);
             this.listBox1.TabIndex = 15;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 508);
+            this.ClientSize = new System.Drawing.Size(1012, 508);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.label6);
