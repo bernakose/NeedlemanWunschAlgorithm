@@ -157,8 +157,7 @@ namespace NeedlemanWunschAlgorithm
             dataGridView1.Rows[1].Cells[1].Value = 0;
             listBox1.Items.Add(dataGridView1.Rows[0].Cells[2].Value);
 
-            hizala(dizin1, dizin2);
-        
+            hizala(dizin1, dizin2);        
         
         }
 
