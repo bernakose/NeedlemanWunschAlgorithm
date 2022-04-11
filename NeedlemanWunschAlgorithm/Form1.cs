@@ -161,36 +161,34 @@ namespace NeedlemanWunschAlgorithm
         
         }
 
-        public int dizilimKarsilastirma(string[] dizin1, string[] dizin2)
+        public int dizilimKarsilastirma(string[] dizin1, string[] dizin2,int i, int j)
         {
             int match = Convert.ToInt32(textBox3.Text);
             int mismatch = Convert.ToInt32(textBox4.Text);
 
             int sonuc = 0;
 
-            for (int i = 0; i < dizin2.Length; i++)
-            {
-                for (int j = 0; j < dizin1.Length; j++)
-                {
+            //for (int i = 0; i < dizin2.Length; i++)
+            //{
+            //    for (int j = 0; j < dizin1.Length; j++)
+            //    {
 
-                    if (String.Compare(dataGridView1.Rows[0].Cells[j + 2].Value.ToString(), dataGridView1.Rows[i + 2].Cells[0].Value.ToString()) == 0)
+                    if (String.Compare(dataGridView1.Rows[0].Cells[j+1].Value.ToString(), dataGridView1.Rows[i+1].Cells[0].Value.ToString()) == 0)
                     {
-                        //dataGridView1.Rows[i + 2].Cells[j + 2].Value = 1;
                         sonuc = match;
-
                     }
                     else
                     {
-                        // dataGridView1.Rows[i + 2].Cells[j + 2].Value = -1;
                         sonuc = mismatch;
                     }
-                }
-            }
+            //    }
+            //}
             return sonuc;
         }
+        
         void hizala(string[] dizin1, string[] dizin2)
         {
-            int karsilastirma = dizilimKarsilastirma(dizin1, dizin2);
+
             int gap = Convert.ToInt32(textBox5.Text);
             int t1 = 0, t2 = 0, t3 = 0;
             Random rs = new Random(1);
@@ -199,16 +197,21 @@ namespace NeedlemanWunschAlgorithm
             {
                 for (int i = 1; i < dizin1.Length + 2; i++)//row
                 {
+
                     if (i == 1 && j == 1)
                     {
 
                     }
                     else if (i - 1 >= 1 && j - 1 >= 1)
                     {
+                        int karsilastirma = dizilimKarsilastirma(dizin1, dizin2, i - 1, j - 1);
+
                         int parca1 = Convert.ToInt32(dataGridView1.Rows[i - 1].Cells[j - 1].Value);
                         t1 = karsilastirma + parca1;
-                        t2 = rs.Next(-50, t1);
-                        t3 = rs.Next(-50, t1);
+                        int parca2 = Convert.ToInt32(dataGridView1.Rows[i - 1].Cells[j].Value);
+                        t2 = gap + parca2;
+                        int parca3 = Convert.ToInt32(dataGridView1.Rows[i].Cells[j - 1].Value);
+                        t3 = gap + parca3;
                     }
                     else if (i - 1 >= 1 && j >= 1)
                     {
@@ -224,6 +227,7 @@ namespace NeedlemanWunschAlgorithm
                         t1 = rs.Next(-50, t3);
                         t2 = rs.Next(-50, t3);
                     }
+
                     int sonucc = islemlerSonuc(t1, t2, t3);
                     dataGridView1.Rows[i].Cells[j].Value = sonucc;
                 }

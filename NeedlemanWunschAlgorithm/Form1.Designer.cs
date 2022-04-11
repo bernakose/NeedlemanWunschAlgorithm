@@ -69,14 +69,14 @@ namespace NeedlemanWunschAlgorithm
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(51, 29);
+            this.textBox1.Location = new System.Drawing.Point(116, 29);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(274, 20);
             this.textBox1.TabIndex = 2;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(51, 68);
+            this.textBox2.Location = new System.Drawing.Point(116, 63);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(274, 20);
             this.textBox2.TabIndex = 3;
@@ -133,7 +133,7 @@ namespace NeedlemanWunschAlgorithm
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(283, 194);
+            this.label4.Location = new System.Drawing.Point(32, 32);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(66, 13);
             this.label4.TabIndex = 11;
@@ -142,7 +142,7 @@ namespace NeedlemanWunschAlgorithm
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(286, 230);
+            this.label5.Location = new System.Drawing.Point(32, 63);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(66, 13);
             this.label5.TabIndex = 12;
