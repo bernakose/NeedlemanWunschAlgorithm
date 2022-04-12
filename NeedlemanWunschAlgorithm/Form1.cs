@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -21,11 +22,10 @@ namespace NeedlemanWunschAlgorithm
         int match, mismatch, gap;
         string[] FirstSequence;
         string[] SecondSequence;
-        int diziboyutu, diziboyutu1;
+        int diziboyutu, diziboyutu1;        
 
-        private void Form1_Load(object sender, EventArgs e)
+        public void degerleriAta()
         {
-
             if (textBox3.Text == "")
             {
                 match = 1;
@@ -57,7 +57,6 @@ namespace NeedlemanWunschAlgorithm
             {
                 gap = Convert.ToInt32(textBox5.Text);
             }
-
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -111,14 +110,11 @@ namespace NeedlemanWunschAlgorithm
             for (int i = 0; i < metin.Length; i++)
             {
                 dizin1[i] = metin[i].ToString();
-                listBox1.Items.Add(dizin1[i]);
             }
 
             for (int i = 0; i < metin2.Length; i++)
             {
                 dizin2[i] = metin2[i].ToString();
-                listBox1.Items.Add("--" + dizin2[i]);
-
             }
 
             DataTable tablo = new DataTable();
@@ -148,7 +144,6 @@ namespace NeedlemanWunschAlgorithm
                 dataGridView1.DataSource = tablo;
             }
 
-
             for (int i = 1; i < dizin1.Length + 1; i++)
             {
                 dataGridView1.Rows[0].Cells[i + 1].Value = dizin1[i - 1];
@@ -157,35 +152,30 @@ namespace NeedlemanWunschAlgorithm
             dataGridView1.Rows[1].Cells[1].Value = 0;
             listBox1.Items.Add(dataGridView1.Rows[0].Cells[2].Value);
 
-            hizala(dizin1, dizin2);        
-        
+            degerleriAta();
+            hizala(dizin1, dizin2);
+            score(dizin1, dizin2);
         }
 
-        public int dizilimKarsilastirma(string[] dizin1, string[] dizin2,int i, int j)
+        public int dizilimKarsilastirma(int i, int j)
         {
             int match = Convert.ToInt32(textBox3.Text);
             int mismatch = Convert.ToInt32(textBox4.Text);
 
             int sonuc = 0;
 
-            //for (int i = 0; i < dizin2.Length; i++)
-            //{
-            //    for (int j = 0; j < dizin1.Length; j++)
-            //    {
+            if (String.Compare(dataGridView1.Rows[0].Cells[j + 1].Value.ToString(), dataGridView1.Rows[i + 1].Cells[0].Value.ToString()) == 0)
+            {
+                sonuc = match;
+            }
+            else
+            {
+                sonuc = mismatch;
+            }
 
-                    if (String.Compare(dataGridView1.Rows[0].Cells[j+1].Value.ToString(), dataGridView1.Rows[i+1].Cells[0].Value.ToString()) == 0)
-                    {
-                        sonuc = match;
-                    }
-                    else
-                    {
-                        sonuc = mismatch;
-                    }
-            //    }
-            //}
             return sonuc;
         }
-        
+
         void hizala(string[] dizin1, string[] dizin2)
         {
 
@@ -204,7 +194,7 @@ namespace NeedlemanWunschAlgorithm
                     }
                     else if (i - 1 >= 1 && j - 1 >= 1)
                     {
-                        int karsilastirma = dizilimKarsilastirma(dizin1, dizin2, i - 1, j - 1);
+                        int karsilastirma = dizilimKarsilastirma(i - 1, j - 1);
 
                         int parca1 = Convert.ToInt32(dataGridView1.Rows[i - 1].Cells[j - 1].Value);
                         t1 = karsilastirma + parca1;
@@ -235,15 +225,11 @@ namespace NeedlemanWunschAlgorithm
             }
         }
 
-        public int islemlerSonuc(/*string[] dizin1, string[] dizin2*/int formul1, int formul2, int formul3)
+        public int islemlerSonuc(int formul1, int formul2, int formul3)
         {
             int enbuyuk = formul1;
             int sonuc = formul1;//geçici değişken atıyoruz
-
-            //int formul1 = islemler(dizin1, dizin2);
-            //int formul2 = islemler2(dizin1, dizin2);
-            //int formul3 = islemler3(dizin1, dizin2);
-
+                        
             if (formul1 > formul2 && formul1 > formul3)
             {
                 enbuyuk = formul1;
@@ -258,7 +244,114 @@ namespace NeedlemanWunschAlgorithm
             }
             sonuc = enbuyuk;
             return sonuc;
+        }
 
+        void score(string[] dizin1, string[] dizin2)
+        {
+            int i = (dizin1.Length) + 1;
+            int j = (dizin2.Length) + 1;
+
+            ArrayList iDegerleri = new ArrayList();
+            ArrayList jDegerleri = new ArrayList();
+            ArrayList komsular = new ArrayList();
+
+            int ilkDeger = Convert.ToInt32(dataGridView1.Rows[j].Cells[i].Value);
+            dataGridView1.Rows[j].Cells[i].Style.BackColor = Color.MediumPurple;
+            int sonDeger = Convert.ToInt32(dataGridView1.Rows[1].Cells[1].Value);
+            dataGridView1.Rows[1].Cells[1].Style.BackColor = Color.MediumPurple;
+
+            iDegerleri.Add(i);
+            jDegerleri.Add(j);
+            komsular.Add(ilkDeger);
+            komsular.Add(sonDeger);
+
+            int komsuDeger1, komsuDeger2, komsuDeger3;
+            int karsilastirma = 0;
+
+            while (i > 1 && j > 1)
+            {
+                komsuDeger1 = Convert.ToInt32(dataGridView1.Rows[j].Cells[i - 1].Value);
+                komsuDeger2 = Convert.ToInt32(dataGridView1.Rows[j - 1].Cells[i - 1].Value);
+                komsuDeger3 = Convert.ToInt32(dataGridView1.Rows[j - 1].Cells[i].Value);
+
+                karsilastirma = dizilimKarsilastirma(j - 1, i - 1);
+
+                if (karsilastirma == 1)
+                {
+                    j = j - 1;
+                    i = i - 1;
+                    iDegerleri.Add(i);
+                    jDegerleri.Add(j);
+                    komsular.Add(komsuDeger2);
+                    dataGridView1.Rows[j].Cells[i].Style.BackColor = Color.MediumPurple;
+                }
+                else if (karsilastirma == -1)
+                {
+                    int enBuyukKomsu = enBuyukKomsuyuBul(komsuDeger1, komsuDeger2, komsuDeger3);
+
+                    if (enBuyukKomsu == komsuDeger2)
+                    {
+                        j = j - 1;
+                        i = i - 1;
+                        iDegerleri.Add(i);
+                        jDegerleri.Add(j);
+                        komsular.Add(komsuDeger2);
+                        dataGridView1.Rows[j].Cells[i].Style.BackColor = Color.MediumPurple;
+                    }
+
+                    else if (enBuyukKomsu == komsuDeger1)
+                    {
+                        i = i - 1;
+                        iDegerleri.Add(i);
+                        jDegerleri.Add(j);
+                        komsular.Add(komsuDeger1);
+                        dataGridView1.Rows[j].Cells[i].Style.BackColor = Color.MediumPurple;
+                    }
+                    else if (enBuyukKomsu == komsuDeger3)
+                    {
+                        j = j - 1;
+                        iDegerleri.Add(i);
+                        jDegerleri.Add(j);
+                        komsular.Add(komsuDeger3);
+                        dataGridView1.Rows[j].Cells[i].Style.BackColor = Color.MediumPurple;
+                    }
+                }
+
+            }
+            //foreach (var item in jDegerleri)
+            //{
+            //    listBox1.Items.Add("j=  " + item);
+            //}
+            //foreach (var item in iDegerleri)
+            //{
+            //    listBox2.Items.Add("i=  " + item);
+            //}
+            foreach (var item in komsular)
+            {
+                listBox1.Items.Add(item);
+            }
+        }
+
+
+        public int enBuyukKomsuyuBul(int komsu1, int komsu2, int komsu3)
+        {
+            int geciciEnBuyuk = komsu1;
+            int enBuyuk = komsu1;//geçici değişken atıyoruz
+
+            if (komsu1 > komsu2 && komsu1 > komsu3)
+            {
+                geciciEnBuyuk = komsu1;
+            }
+            else if (komsu2 > komsu1 && komsu2 > komsu3)
+            {
+                geciciEnBuyuk = komsu2;
+            }
+            else if (komsu3 > komsu2 && komsu3 > komsu1)
+            {
+                geciciEnBuyuk = komsu3;
+            }
+            enBuyuk = geciciEnBuyuk;
+            return enBuyuk;
         }
 
     }
