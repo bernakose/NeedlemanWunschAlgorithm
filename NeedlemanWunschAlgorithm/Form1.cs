@@ -22,7 +22,7 @@ namespace NeedlemanWunschAlgorithm
         int match, mismatch, gap;
         string[] FirstSequence;
         string[] SecondSequence;
-        int diziboyutu, diziboyutu1;        
+        int diziboyutu, diziboyutu1;
 
         public void degerleriAta()
         {
@@ -150,7 +150,6 @@ namespace NeedlemanWunschAlgorithm
             }
 
             dataGridView1.Rows[1].Cells[1].Value = 0;
-            listBox1.Items.Add(dataGridView1.Rows[0].Cells[2].Value);
 
             degerleriAta();
             hizala(dizin1, dizin2);
@@ -229,7 +228,7 @@ namespace NeedlemanWunschAlgorithm
         {
             int enbuyuk = formul1;
             int sonuc = formul1;//geçici değişken atıyoruz
-                        
+
             if (formul1 > formul2 && formul1 > formul3)
             {
                 enbuyuk = formul1;
@@ -316,20 +315,8 @@ namespace NeedlemanWunschAlgorithm
                         dataGridView1.Rows[j].Cells[i].Style.BackColor = Color.MediumPurple;
                     }
                 }
-
             }
-            //foreach (var item in jDegerleri)
-            //{
-            //    listBox1.Items.Add("j=  " + item);
-            //}
-            //foreach (var item in iDegerleri)
-            //{
-            //    listBox2.Items.Add("i=  " + item);
-            //}
-            foreach (var item in komsular)
-            {
-                listBox1.Items.Add(item);
-            }
+            dizilimiYap(iDegerleri, jDegerleri);
         }
 
 
@@ -354,5 +341,29 @@ namespace NeedlemanWunschAlgorithm
             return enBuyuk;
         }
 
+        void dizilimiYap(ArrayList liste1, ArrayList liste2)
+        {
+            ArrayList dizilim1 = new ArrayList();
+            ArrayList dizilim2 = new ArrayList();
+
+            for (int a = liste1.Count - 1; a >= 0; a--)//i=listelerde de gezienen indis değeri
+            {
+                int i = Convert.ToInt32(liste1[a]);
+                int j = Convert.ToInt32(liste2[a]);
+                dizilim1.Add(dataGridView1.Rows[0].Cells[i].Value.ToString());
+                dizilim2.Add(dataGridView1.Rows[j].Cells[0].Value.ToString());
+
+            }
+
+            foreach (var item in dizilim1)
+            {
+                textBox6.Text += item.ToString();
+            }
+
+            foreach (var item in dizilim2)
+            {
+                textBox7.Text += item.ToString();
+            }
+        }
     }
 }
